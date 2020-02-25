@@ -7,7 +7,8 @@ class Strings {
   static const String estimatedTimeOfArrival = "ETA";
   static const String cancel = "Cancel";
   static const String location = "Enter location";
-  static const String login = "Log In";
+  static const String login = "Log in";
+  static const String logout = "Log out";
   static const String signup = "Sign Up";
   static const String googleLogin = "Log In with Google";
   static const String usernameHint = "Username";
@@ -29,4 +30,9 @@ class Strings {
   static const String saveImage = "Save as image";
   static const String generateInstruction1 = "To generate a new QR Code\n";
   static const String generateInstruction2 = "Profile -> Stop Code -> Generate new";
+  static const String generateStopCode = "Generate Stop Code";
+  static const String personalInfo = "Personal Info";
+  static const String vehicleInfo = "Vehicle Info";
+  static const String accountSettings = "Account Settings";
+  static const String logoutConfirmation = "Are you sure you want to logout";
 }
