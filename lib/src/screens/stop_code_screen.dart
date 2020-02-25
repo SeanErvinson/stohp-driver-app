@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stohp_driver_app/src/components/common/stop_code_argument.dart';
+import 'package:stohp_driver_app/src/values/values.dart';
 
 class StopCodeScreen extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _StopCodeScreenState extends State<StopCodeScreen> {
     return SafeArea(
       child: Scaffold(
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Row(
               children: <Widget>[
@@ -33,34 +34,47 @@ class _StopCodeScreenState extends State<StopCodeScreen> {
                 ),
               ],
             ),
-            Expanded(
-              child: Center(
-                child: RepaintBoundary(
-                  key: globalKey,
-                  child: QrImage(
-                    data: args.stopCode,
-                    size: 320,
-                    version: QrVersions.auto,
-                    padding: EdgeInsets.all(16),
-                    embeddedImage: AssetImage('assets/icons/logo-banner.png'),
-                    embeddedImageStyle: QrEmbeddedImageStyle(
-                      size: Size(80, 80),
+            Column(
+              children: <Widget>[
+                Center(
+                  child: RepaintBoundary(
+                    key: globalKey,
+                    child: QrImage(
+                      data: args.stopCode,
+                      size: 320,
+                      version: QrVersions.auto,
+                      padding: EdgeInsets.all(16),
+                      embeddedImage: AssetImage('assets/icons/logo-banner.png'),
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                        size: Size(80, 80),
+                      ),
                     ),
                   ),
                 ),
+                FlatButton.icon(
+                  icon: Icon(Icons.save_alt),
+                  onPressed: _captureAndSharePng,
+                  textColor: bluePrimary,
+                  label: Text(Strings.saveImage),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: Strings.generateInstruction1,
+                  children: [
+                    TextSpan(
+                        text: Strings.generateInstruction2,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black87))
+                  ],
+                  style: TextStyle(color: Colors.black87),
+                ),
               ),
             ),
-            RichText(
-                text: TextSpan(text: "To generate a new QR Code\n", children: [
-              TextSpan(
-                  text: "Profile -> Stop Code -> Generate new",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.red))
-            ])),
-            IconButton(
-              icon: Icon(Icons.save_alt),
-              onPressed: _captureAndSharePng,
-            )
           ],
         ),
       ),
@@ -77,7 +91,6 @@ class _StopCodeScreenState extends State<StopCodeScreen> {
 
       final pathDir = await getExternalStorageDirectory();
       final file = await new File('${pathDir.path}/stop-code.png').create();
-      print(file.path);
       await file.writeAsBytes(pngBytes);
     } catch (e) {
       print(e.toString());
