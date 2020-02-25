@@ -43,7 +43,7 @@ class StohpDriverApp extends StatelessWidget {
               userRepository: userRepository,
             ),
         "registration": (context) => RegistrationScreen(),
-        "setting": (context) => SettingScreen(),
+        "profile": (context) => ProfileScreen(),
         "home": (context) => HomeScreen(),
         "stop-code": (context) => StopCodeScreen(),
         "splash": (context) => SplashScreen(),
