@@ -10,3 +10,5 @@ abstract class StopState extends Equatable {
 class StopInitial extends StopState {}
 
 class StopListening extends StopState {}
+
+class StopReceived extends StopState {}
