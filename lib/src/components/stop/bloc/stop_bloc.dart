@@ -37,7 +37,7 @@ class StopBloc extends Bloc<StopEvent, StopState> {
 
   Stream<StopState> _mapStopConnect(String stopCode) async* {
     _socket = IOWebSocketChannel.connect(
-        'ws://${ApiService.baseUrl}/ws/stop/$stopCode/');
+        '${ApiService.baseWsUrl}/ws/stop/$stopCode/');
     _wsSubscription = _socket.stream.listen((data) => add(StopListen(data)));
   }
 
