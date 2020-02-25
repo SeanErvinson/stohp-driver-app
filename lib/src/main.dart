@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stohp_driver_app/src/components/stop/bloc/stop_bloc.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
 import 'package:stohp_driver_app/src/screens/screens.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
@@ -16,7 +17,10 @@ void main() {
         return AuthenticationBloc(userRepository: userRepository)
           ..add(AppStarted());
       },
-      child: StohpDriverApp(userRepository: userRepository),
+      child: BlocProvider<StopBloc>(
+        create: (context) => StopBloc(),
+        child: StohpDriverApp(userRepository: userRepository),
+      ),
     ),
   );
 }
@@ -41,6 +45,7 @@ class StohpDriverApp extends StatelessWidget {
         "registration": (context) => RegistrationScreen(),
         "setting": (context) => SettingScreen(),
         "home": (context) => HomeScreen(),
+        "stop-code": (context) => StopCodeScreen(),
         "splash": (context) => SplashScreen(),
       },
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -49,6 +54,8 @@ class StohpDriverApp extends StatelessWidget {
             return SplashScreen();
           }
           if (state is Authenticated) {
+            BlocProvider.of<StopBloc>(context)
+                .add(StopConnect(state.user.profile.stopCode));
             return HomeScreen(
               user: state.user,
             );
