@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
 import 'package:stohp_driver_app/src/services/api_service.dart';
 import 'package:vibration/vibration.dart';
 import 'package:web_socket_channel/io.dart';
@@ -10,8 +11,11 @@ part 'stop_event.dart';
 part 'stop_state.dart';
 
 class StopBloc extends Bloc<StopEvent, StopState> {
+  final DialogBloc _dialogBloc;
   IOWebSocketChannel _socket;
   StreamSubscription _wsSubscription;
+
+  StopBloc(this._dialogBloc);
 
   @override
   Future<void> close() {
@@ -36,14 +40,23 @@ class StopBloc extends Bloc<StopEvent, StopState> {
   }
 
   Stream<StopState> _mapStopConnect(String stopCode) async* {
+    if (_wsSubscription != null || _socket != null) yield StopListening();
     _socket = IOWebSocketChannel.connect(
         '${ApiService.baseWsUrl}/ws/stop/$stopCode/');
-    _wsSubscription = _socket.stream.listen((data) => add(StopListen(data)));
+    _wsSubscription = _socket.stream.listen((data) {
+      add(StopListen(data));
+    }, onError: (error) {
+      print(error);
+    }, onDone: () {
+      add(StopConnect(stopCode));
+    });
+    yield StopListening();
   }
 
   Stream<StopState> _mapStopListen(String data) async* {
     Vibration.vibrate();
-    yield StopListening();
+    _dialogBloc.add(ShowDialog());
+    yield StopReceived();
   }
 
   Stream<StopState> _mapStopDisconnect() async* {
