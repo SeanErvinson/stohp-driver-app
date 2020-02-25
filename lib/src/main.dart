@@ -68,6 +68,13 @@ class StohpDriverApp extends StatelessWidget {
             }
             if (state is Authenticated) {
               return BlocBuilder<DialogBloc, DialogState>(
+                condition: (previousState, state) {
+                  if (previousState is DialogVisible &&
+                      state is DialogVisible) {
+                    return false;
+                  }
+                  return true;
+                },
                 bloc: BlocProvider.of<DialogBloc>(context),
                 builder: (context, dialogState) {
                   if (dialogState is DialogVisible) {
@@ -75,7 +82,9 @@ class StohpDriverApp extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return StopDialog();
+                          return StopDialog(
+                            bloc: BlocProvider.of<DialogBloc>(context),
+                          );
                         },
                       );
                     });
