@@ -29,6 +29,11 @@ const TextStyle secondaryAppText = TextStyle(
   fontSize: 16,
 );
 
+const TextStyle contrastAppText = TextStyle(
+  color: Colors.white,
+  fontSize: 16,
+);
+
 const TextStyle secondaryAppBoldText = TextStyle(
   color: colorSecondary,
   fontSize: 16,

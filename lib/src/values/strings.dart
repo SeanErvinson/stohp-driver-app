@@ -35,4 +35,7 @@ class Strings {
   static const String vehicleInfo = "Vehicle Info";
   static const String accountSettings = "Account Settings";
   static const String logoutConfirmation = "Are you sure you want to logout";
+  static const String stopDialogInstruction1 = "PARA\n";
+  static const String stopDialogInstruction2 = "Stop to the nearest corner";
+  static const String stopDialogInstruction3 = "Click anywhere to dismiss window";
 }
