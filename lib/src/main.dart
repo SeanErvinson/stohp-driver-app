@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
+import 'package:stohp_driver_app/src/components/common/stop_dialog.dart';
 import 'package:stohp_driver_app/src/components/stop/bloc/stop_bloc.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
 import 'package:stohp_driver_app/src/screens/screens.dart';
@@ -74,23 +75,7 @@ class StohpDriverApp extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            content: Text("Hello"),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text(
-                                  Strings.cancel,
-                                  style:
-                                      secondaryBaseText.copyWith(fontSize: 12),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  BlocProvider.of<DialogBloc>(context)
-                                      .add(HideDialog());
-                                },
-                              ),
-                            ],
-                          );
+                          return StopDialog();
                         },
                       );
                     });
