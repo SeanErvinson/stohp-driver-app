@@ -6,9 +6,11 @@ import 'package:http/http.dart' as http;
 import 'app_exception.dart';
 
 class ApiService {
-  static const String _baseUrl = "192.168.0.111:8000/";
+  static const String _baseUrl = "http://192.168.0.111:8000";
+  static const String _baseWsUrl = "ws://192.168.0.111:8000";
 
   static String get baseUrl => _baseUrl;
+  static String get baseWsUrl => _baseWsUrl;
 
   Future<dynamic> get(String url) async {
     var responseJson;
