@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
 import 'package:stohp_driver_app/src/components/stop/bloc/stop_bloc.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
 import 'package:stohp_driver_app/src/screens/screens.dart';
@@ -17,9 +19,12 @@ void main() {
         return AuthenticationBloc(userRepository: userRepository)
           ..add(AppStarted());
       },
-      child: BlocProvider<StopBloc>(
-        create: (context) => StopBloc(),
-        child: StohpDriverApp(userRepository: userRepository),
+      child: BlocProvider<DialogBloc>(
+        create: (context) => DialogBloc(),
+        child: BlocProvider<StopBloc>(
+          create: (context) => StopBloc(BlocProvider.of<DialogBloc>(context)),
+          child: StohpDriverApp(userRepository: userRepository),
+        ),
       ),
     ),
   );
@@ -48,25 +53,62 @@ class StohpDriverApp extends StatelessWidget {
         "stop-code": (context) => StopCodeScreen(),
         "splash": (context) => SplashScreen(),
       },
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-          if (state is Uninitialized) {
-            return SplashScreen();
-          }
+      home: BlocListener<AuthenticationBloc, AuthenticationState>(
+        listener: (context, state) {
           if (state is Authenticated) {
             BlocProvider.of<StopBloc>(context)
                 .add(StopConnect(state.user.profile.stopCode));
-            return HomeScreen(
-              user: state.user,
-            );
-          }
-          if (state is Unauthenticated) {
-            return LoginScreen(userRepository: userRepository);
-          }
-          if (state is AuthenticationLoading) {
-            return CircularProgressIndicator();
           }
         },
+        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
+            if (state is Uninitialized) {
+              return SplashScreen();
+            }
+            if (state is Authenticated) {
+              return BlocBuilder<DialogBloc, DialogState>(
+                bloc: BlocProvider.of<DialogBloc>(context),
+                builder: (context, dialogState) {
+                  if (dialogState is DialogVisible) {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text("Hello"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text(
+                                  Strings.cancel,
+                                  style:
+                                      secondaryBaseText.copyWith(fontSize: 12),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  BlocProvider.of<DialogBloc>(context)
+                                      .add(HideDialog());
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    });
+                  }
+                  return HomeScreen(
+                    user: state.user,
+                  );
+                },
+              );
+            }
+            if (state is Unauthenticated) {
+              return LoginScreen(userRepository: userRepository);
+            }
+            if (state is AuthenticationLoading) {
+              return CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }
