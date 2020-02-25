@@ -46,7 +46,7 @@ class _StopCodeScreenState extends State<StopCodeScreen> {
                       padding: EdgeInsets.all(16),
                       embeddedImage: AssetImage('assets/icons/logo-banner.png'),
                       embeddedImageStyle: QrEmbeddedImageStyle(
-                        size: Size(80, 80),
+                        size: Size(64, 64),
                       ),
                     ),
                   ),
