@@ -10,7 +10,7 @@ class Strings {
   static const String login = "Log In";
   static const String signup = "Sign Up";
   static const String googleLogin = "Log In with Google";
-  static const String emailHint = "Email address";
+  static const String usernameHint = "Username";
   static const String passwordHint = "Password";
   static const String register = "Register";
   static const String newsStoriesHeader = "News & Stories";
@@ -23,4 +23,7 @@ class Strings {
   static const String scanError = "Invalid code!";
   static const String yesOption = "Yes";
   static const String noOption = "No";
+  static const String navQrCode = "QR";
+  static const String navTrip = "Trip";
+  static const String navProfile = "Profile";
 }
