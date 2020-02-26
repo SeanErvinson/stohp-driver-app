@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/authentication_bloc.dart';
+import 'package:stohp_driver_app/src/components/common/stohp_driver_icons.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_screen_argument.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
 import 'package:stohp_driver_app/src/services/api_service.dart';
@@ -71,8 +72,8 @@ class ProfileScreen extends StatelessWidget {
                             dense: true,
                             title: Text(Strings.personalInfo),
                             trailing: Icon(
-                              Icons.person_outline,
-                              size: 24,
+                              StohpDriver.user,
+                              size: 16,
                               color: Colors.black87,
                             ),
                           ),
@@ -82,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                             title: Text(Strings.vehicleInfo),
                             trailing: Icon(
                               Icons.directions_car,
-                              size: 24,
+                              size: 16,
                               color: Colors.black87,
                             ),
                           ),
@@ -91,8 +92,8 @@ class ProfileScreen extends StatelessWidget {
                             dense: true,
                             title: Text(Strings.generateStopCode),
                             trailing: Icon(
-                              Icons.crop_square,
-                              size: 24,
+                              StohpDriver.arrows_cw,
+                              size: 16,
                               color: Colors.black87,
                             ),
                           ),

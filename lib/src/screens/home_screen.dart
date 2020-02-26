@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stohp_driver_app/src/components/common/stohp_driver_icons.dart';
 import 'package:stohp_driver_app/src/components/common/stop_code_argument.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_screen_argument.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
@@ -26,11 +27,11 @@ class HomeScreen extends StatelessWidget {
           ),
           bottomNavigationBar: BottomAppBar(
               shape: CircularNotchedRectangle(),
-              notchMargin: 4.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   FlatButton(
+                    textColor: Colors.black54,
                     onPressed: () => Navigator.of(context).pushNamed(
                         "stop-code",
                         arguments: StopCodeArgument(user.profile.stopCode)),
@@ -39,22 +40,23 @@ class HomeScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Icon(
-                          Icons.code,
-                          size: 32,
+                          StohpDriver.qr,
+                          size: 16,
                         ),
                         Text(Strings.navQrCode)
                       ],
                     ),
                   ),
                   FlatButton(
+                    textColor: Colors.black54,
                     onPressed: () => Navigator.of(context).pushNamed("profile",
                         arguments: ProfileScreenArguemnt(user)),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Icon(
-                          Icons.person_outline,
-                          size: 32,
+                          StohpDriver.user,
+                          size: 16,
                         ),
                         Text(Strings.navProfile)
                       ],
@@ -66,7 +68,7 @@ class HomeScreen extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Container(
-                color: Colors.deepPurple,
+                color: Colors.white,
               ))
             ],
           )),
