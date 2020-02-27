@@ -24,19 +24,26 @@ class Strings {
   static const String scanError = "Invalid code!";
   static const String yesOption = "Yes";
   static const String noOption = "No";
+  static const String okOption = "OK";
   static const String navQrCode = "QR";
   static const String full = "FULL";
   static const String space = "SPACE";
   static const String navProfile = "Profile";
   static const String saveImage = "Save as image";
   static const String generateInstruction1 = "To generate a new QR Code\n";
-  static const String generateInstruction2 = "Profile -> Stop Code -> Generate new";
+  static const String generateInstruction2 =
+      "Profile -> Stop Code -> Generate new";
   static const String generateStopCode = "Generate Stop Code";
   static const String personalInfo = "Personal Info";
   static const String vehicleInfo = "Vehicle Info";
   static const String accountSettings = "Account Settings";
   static const String logoutConfirmation = "Are you sure you want to logout";
+  static const String generateConfirmation =
+      "Are you sure you want to generate a new stop code?";
   static const String stopDialogInstruction1 = "PARA\n";
   static const String stopDialogInstruction2 = "Stop to the nearest corner";
-  static const String stopDialogInstruction3 = "Click anywhere to dismiss window";
+  static const String stopDialogInstruction3 =
+      "Click anywhere to dismiss window";
+  static const String generateStopCodeSuccess = "Successfully generated new stop code";
+  static const String generateStopCodeFailed= "Something went wrong! Try again later";
 }
