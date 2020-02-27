@@ -25,7 +25,8 @@ class Strings {
   static const String yesOption = "Yes";
   static const String noOption = "No";
   static const String navQrCode = "QR";
-  static const String navTrip = "Trip";
+  static const String full = "FULL";
+  static const String space = "SPACE";
   static const String navProfile = "Profile";
   static const String saveImage = "Save as image";
   static const String generateInstruction1 = "To generate a new QR Code\n";
