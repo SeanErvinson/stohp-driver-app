@@ -13,24 +13,22 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          extendBody: true,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
             backgroundColor: colorPrimary,
             onPressed: null,
-            elevation: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[Text(Strings.navTrip), Text("0")],
-            ),
+            child: Text(Strings.full),
           ),
           bottomNavigationBar: BottomAppBar(
+              notchMargin: 8,
               shape: CircularNotchedRectangle(),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   FlatButton(
+                    shape: CircleBorder(),
                     textColor: Colors.black54,
                     onPressed: () => Navigator.of(context).pushNamed(
                         "stop-code",
@@ -41,13 +39,17 @@ class HomeScreen extends StatelessWidget {
                       children: <Widget>[
                         Icon(
                           StohpDriver.qr,
-                          size: 16,
+                          size: 20,
                         ),
-                        Text(Strings.navQrCode)
+                        Text(
+                          Strings.navQrCode,
+                          style: TextStyle(fontSize: 10),
+                        )
                       ],
                     ),
                   ),
                   FlatButton(
+                    shape: CircleBorder(),
                     textColor: Colors.black54,
                     onPressed: () => Navigator.of(context).pushNamed("profile",
                         arguments: ProfileScreenArguemnt(user)),
@@ -56,9 +58,12 @@ class HomeScreen extends StatelessWidget {
                       children: <Widget>[
                         Icon(
                           StohpDriver.user,
-                          size: 16,
+                          size: 20,
                         ),
-                        Text(Strings.navProfile)
+                        Text(
+                          Strings.navProfile,
+                          style: TextStyle(fontSize: 10),
+                        )
                       ],
                     ),
                   ),
@@ -68,7 +73,7 @@ class HomeScreen extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Container(
-                color: Colors.white,
+                color: Colors.black12,
               ))
             ],
           )),
