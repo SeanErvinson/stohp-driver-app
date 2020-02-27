@@ -4,12 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:stohp_driver_app/src/models/user.dart';
+import 'package:stohp_driver_app/src/services/api_service.dart';
+import 'package:stohp_driver_app/src/services/app_exception.dart';
 
 class UserRepository {
   final String _tokenKey = "token";
 
   Future<String> authenticate({@required username, @required password}) async {
-    String url = "http://192.168.0.111:8000/api/v1/auth/login/";
+    String url = "${ApiService.baseUrl}/api/v1/auth/login/";
     var response = await http
         .post(url, body: {'username': username, 'password': password});
     if (response.statusCode == 200) {
@@ -20,7 +22,7 @@ class UserRepository {
   }
 
   Future<User> getUser(String token) async {
-    String url = "http://192.168.0.111:8000/api/v1/users/access-user/";
+    String url = "${ApiService.baseUrl}/api/v1/users/access-user/";
     var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -51,5 +53,20 @@ class UserRepository {
     String value = await storage.read(key: _tokenKey);
     if (value != null) return value;
     return null;
+  }
+
+  Future<String> getStopCode() async {
+    String url = "${ApiService.baseUrl}/api/v1/users/generate-stop-code/";
+    var token = await getToken();
+    var response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Token $token',
+    });
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      return jsonData;
+    }
+    throw BadRequestException(response.body.toString());
   }
 }
