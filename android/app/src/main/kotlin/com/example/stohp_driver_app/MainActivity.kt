@@ -1,4 +1,4 @@
-package com.example.stohp_driver_app
+package com.seanervinson.stohp_driver_app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
