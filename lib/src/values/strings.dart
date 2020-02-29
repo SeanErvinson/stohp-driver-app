@@ -46,4 +46,5 @@ class Strings {
       "Click anywhere to dismiss window";
   static const String generateStopCodeSuccess = "Successfully generated new stop code";
   static const String generateStopCodeFailed= "Something went wrong! Try again later";
+  static const String back= "Back";
 }
