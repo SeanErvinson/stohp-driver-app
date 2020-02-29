@@ -1,39 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stohp_driver_app/src/values/strings.dart';
+import 'package:stohp_driver_app/src/components/common/bloc/authentication_bloc.dart';
+import 'package:stohp_driver_app/src/components/login/bloc/login_bloc.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
 
-import 'bloc/login_bloc.dart';
-
 class LoginForm extends StatefulWidget {
-  @override
   State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  LoginBloc _loginBloc;
+
+  bool get isPopulated =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+
+  bool isLoginButtonEnabled(LoginState state) {
+    return state.isFormValid && isPopulated && !state.isSubmitting;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
+    _emailController.addListener(_onEmailChanged);
+    _passwordController.addListener(_onPasswordChanged);
+  }
 
   @override
   Widget build(BuildContext context) {
-    _onLoginButtonPressed() {
-      BlocProvider.of<LoginBloc>(context).add(
-        LoginButtonPressed(
-          username: _usernameController.text,
-          password: _passwordController.text,
-        ),
-      );
-    }
-
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state is LoginFailure) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${state.error}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+        if (state.isFailure) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('Login Failure'), Icon(Icons.error)],
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+        }
+        if (state.isSubmitting) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Logging In...'),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            );
+        }
+        if (state.isSuccess) {
+          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
+          Navigator.of(context).pop();
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -44,13 +74,16 @@ class _LoginFormState extends State<LoginForm> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: _usernameController,
+                    controller: _emailController,
                     decoration: InputDecoration(
                       hintText: Strings.usernameHint,
                     ),
                     keyboardType: TextInputType.emailAddress,
                     autovalidate: true,
                     autocorrect: false,
+                    validator: (_) {
+                      return !state.isUsernameValid ? 'Invalid Email' : null;
+                    },
                   ),
                   TextFormField(
                     controller: _passwordController,
@@ -60,24 +93,50 @@ class _LoginFormState extends State<LoginForm> {
                     obscureText: true,
                     autovalidate: true,
                     autocorrect: false,
+                    validator: (_) {
+                      return !state.isPasswordValid ? 'Invalid Password' : null;
+                    },
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: LogInButton(
                       onPressed:
-                          state is! LoginLoading ? _onLoginButtonPressed : null,
+                          isLoginButtonEnabled(state) ? _onFormSubmitted : null,
                     ),
-                  ),
-                  Container(
-                    child: state is LoginLoading
-                        ? CircularProgressIndicator()
-                        : null,
                   ),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _onEmailChanged() {
+    _loginBloc.add(
+      OnUsernameChanged(username: _emailController.text),
+    );
+  }
+
+  void _onPasswordChanged() {
+    _loginBloc.add(
+      OnPasswordChanged(password: _passwordController.text),
+    );
+  }
+
+  void _onFormSubmitted() {
+    _loginBloc.add(
+      LoginWithCredentialsPressed(
+        username: _emailController.text,
+        password: _passwordController.text,
       ),
     );
   }
