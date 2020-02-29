@@ -22,18 +22,27 @@ class _StopCodeScreenState extends State<StopCodeScreen> {
     print(args);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(48),
+          child: AppBar(
+            titleSpacing: 0,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+              color: Colors.black87,
+            ),
+            title: Text(
+              Strings.back,
+              style: TextStyle(color: Colors.black87, fontSize: 14),
+            ),
+          ),
+        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                FlatButton.icon(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
-                  label: Text("Back"),
-                ),
-              ],
-            ),
             Column(
               children: <Widget>[
                 Center(
