@@ -104,7 +104,7 @@ class StohpDriverApp extends StatelessWidget {
               );
             }
             if (state is Unauthenticated) {
-              return LoginScreen(userRepository: userRepository);
+              return WelcomeScreen();
             }
             if (state is AuthenticationLoading) {
               return CircularProgressIndicator();
