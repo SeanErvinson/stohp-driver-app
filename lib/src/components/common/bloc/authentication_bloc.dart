@@ -1,20 +1,20 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
 
-part 'authentication_event.dart';
 part 'authentication_state.dart';
+part 'authentication_event.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final UserRepository userRepository;
+  final UserRepository _userRepository;
 
-  AuthenticationBloc({@required this.userRepository})
-      : assert(userRepository != null);
+  AuthenticationBloc({@required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository;
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -24,20 +24,20 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AppStarted) {
-      yield* _mapAppStarted();
+      yield* _mapAppStartedToState();
     } else if (event is LoggedIn) {
-      yield* _mapLoggedInToState(event.token);
+      yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
     }
   }
 
-  Stream<AuthenticationState> _mapAppStarted() async* {
-    final String token = await userRepository.getToken();
+  Stream<AuthenticationState> _mapAppStartedToState() async* {
+    final String token = await _userRepository.getToken();
 
     if (token != null) {
       try {
-        User user = await userRepository.getUser(token);
+        User user = await _userRepository.getUser(token);
         yield Authenticated(user);
       } catch (_) {
         yield Unauthenticated();
@@ -47,14 +47,14 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapLoggedInToState(token) async* {
-    await userRepository.persistToken(token);
-    User user = await userRepository.getUser(token);
+  Stream<AuthenticationState> _mapLoggedInToState() async* {
+    String token = await _userRepository.getToken();
+    User user = await _userRepository.getUser(token);
     yield (Authenticated(user));
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     yield (Unauthenticated());
-    await userRepository.deleteToken();
+    await _userRepository.deleteToken();
   }
 }
