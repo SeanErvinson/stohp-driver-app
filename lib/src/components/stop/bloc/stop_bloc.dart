@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
 import 'package:stohp_driver_app/src/services/api_service.dart';
 import 'package:vibration/vibration.dart';
@@ -54,7 +55,11 @@ class StopBloc extends Bloc<StopEvent, StopState> {
   }
 
   Stream<StopState> _mapStopListen(String data) async* {
-    Vibration.vibrate();
+    FlutterRingtonePlayer.playNotification(
+      looping: false,
+      asAlarm: true,
+    );
+    Vibration.vibrate(pattern: [500, 1000, 500, 1000]);
     _dialogBloc.add(ShowDialog());
     yield StopReceived();
   }
