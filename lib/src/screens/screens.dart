@@ -5,3 +5,6 @@ export 'welcome_screen.dart';
 export 'profile_screen.dart';
 export 'splash_screen.dart';
 export 'stop_code_screen.dart';
+export 'personal_info_screen.dart';
+export 'vehicle_info_screen.dart';
+export 'privacy_policy_screen.dart';

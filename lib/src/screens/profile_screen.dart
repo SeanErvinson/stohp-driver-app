@@ -5,9 +5,9 @@ import 'package:stohp_driver_app/src/components/common/stohp_driver_icons.dart';
 import 'package:stohp_driver_app/src/components/profile/generate_stop_code_dialog.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_header.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_screen_argument.dart';
+import 'package:stohp_driver_app/src/components/profile/user_screen_argument.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
-import 'package:stohp_driver_app/src/services/api_service.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -19,9 +19,26 @@ class ProfileScreen extends StatelessWidget {
     final User user = args.user;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(48),
+          child: AppBar(
+            titleSpacing: 0,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+              color: Colors.black87,
+            ),
+            title: Text(
+              Strings.navProfile,
+              style: TextStyle(color: Colors.black87, fontSize: 14),
+            ),
+          ),
+        ),
         body: Column(
           children: <Widget>[
-            BackAppBar(),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,6 +72,9 @@ class ProfileScreen extends StatelessWidget {
                                     size: 16,
                                     color: Colors.black87,
                                   ),
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                      "personal-info",
+                                      arguments: UserArgument(user: user)),
                                 ),
                                 ListTile(
                                   contentPadding: EdgeInsets.zero,
@@ -91,7 +111,22 @@ class ProfileScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Divider(),
+                          Flexible(
+                            flex: 1,
+                            child: Container(),
+                          ),
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(Strings.privacyPolicy),
+                            trailing: Icon(
+                              Icons.lock,
+                              size: 16,
+                              color: Colors.black54,
+                            ),
+                            onTap: () => Navigator.of(context)
+                                .pushNamed("privacy-policy"),
+                          ),
                           ListTile(
                             contentPadding: EdgeInsets.zero,
                             dense: true,
@@ -99,45 +134,27 @@ class ProfileScreen extends StatelessWidget {
                             trailing: Icon(
                               Icons.exit_to_app,
                               size: 24,
-                              color: Colors.black87,
+                              color: colorSecondary,
                             ),
                             onTap: () => showDialog(
                               context: context,
                               builder: (context) {
-                                return AlertDialog(
-                                  titlePadding: EdgeInsets.zero,
-                                  contentTextStyle:
-                                      primaryBaseText.copyWith(fontSize: 14.0),
-                                  content: Text(
-                                    Strings.logoutConfirmation,
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text(
-                                        Strings.cancel,
-                                        style: secondaryBaseText.copyWith(
-                                            fontSize: 12),
-                                      ),
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                    ),
-                                    FlatButton(
-                                      child: Text(
-                                        Strings.logout,
-                                        style: secondaryAppText.copyWith(
-                                            fontSize: 12),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
-                                        BlocProvider.of<AuthenticationBloc>(
-                                                context)
-                                            .add(LoggedOut());
-                                      },
-                                    ),
-                                  ],
-                                );
+                                return _buildLogoutConfirmationDialog(context);
                               },
+                            ),
+                          ),
+                          Center(
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                text: Strings.appName,
+                                style: TextStyle(
+                                    fontSize: 10.0, color: Colors.black87),
+                                children: [
+                                  TextSpan(text: "\n"),
+                                  TextSpan(text: Strings.version),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -152,22 +169,33 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class BackAppBar extends StatelessWidget {
-  const BackAppBar({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.arrow_back),
+  AlertDialog _buildLogoutConfirmationDialog(BuildContext context) {
+    return AlertDialog(
+      titlePadding: EdgeInsets.zero,
+      contentTextStyle: primaryBaseText.copyWith(fontSize: 14.0),
+      content: Text(
+        Strings.logoutConfirmation,
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            Strings.cancel,
+            style: secondaryBaseText.copyWith(fontSize: 12),
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        Text(Strings.navProfile),
+        FlatButton(
+          child: Text(
+            Strings.logout,
+            style: secondaryAppText.copyWith(fontSize: 12),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+          },
+        ),
       ],
     );
   }

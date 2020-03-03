@@ -44,7 +44,30 @@ class Strings {
   static const String stopDialogInstruction2 = "Stop to the nearest corner";
   static const String stopDialogInstruction3 =
       "Click anywhere to dismiss window";
-  static const String generateStopCodeSuccess = "Successfully generated new stop code";
-  static const String generateStopCodeFailed= "Something went wrong! Try again later";
-  static const String back= "Back";
+  static const String generateStopCodeSuccess =
+      "Successfully generated new stop code";
+  static const String generateStopCodeFailed =
+      "Something went wrong! Try again later";
+  static const String personalInfoHeader = "Edit personal info";
+  static const String vehicleInfoHeader = "Edit vehicle info";
+  static const String save = "Save";
+  static const String firstName = "First name";
+  static const String lastName = "Last name";
+  static const String email = "Email";
+  static const String back = "Back";
+  static const String about = "About";
+  static const String version = "Version 1.0.0";
+  static const String privacyPolicy = "Privacy policy";
+  static const String notifications = "Notifications";
+  static const String credit = "SeanErvinson";
+  static const String personalInfoSuccess = "Successfully updated!";
+  static const String personalInfoFail =
+      "Something went wrong! Please try again later.";
+  static const String loginFailed = "Failed to login. Please try again!";
+  static const String loginLoading = "Logging you in!";
+  static const String registerFailed = "Failed to register. Please try again!";
+  static const String registerLoading = "Hold up getting things ready.";
+  static const String usernameWarning = "Invalid username";
+  static const String passwordWarning = "Invalid password";
+  static const String editProfile = "Edit Profile";
 }
