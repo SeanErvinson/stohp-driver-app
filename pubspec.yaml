@@ -23,6 +23,8 @@ dependencies:
   vibration: ^1.2.2
   web_socket_channel: ^1.1.0
   path_provider: ^1.6.1
+  image_picker: ^0.6.3+4
+  webview_flutter: ^0.3.19+8
 
   # Bloc
   flutter_bloc: ^3.1.0
@@ -64,3 +66,4 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/files/
