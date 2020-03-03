@@ -60,8 +60,8 @@ class Strings {
   static const String privacyPolicy = "Privacy policy";
   static const String notifications = "Notifications";
   static const String credit = "SeanErvinson";
-  static const String personalInfoSuccess = "Successfully updated!";
-  static const String personalInfoFail =
+  static const String updateSuccess = "Successfully updated!";
+  static const String updateFailed =
       "Something went wrong! Please try again later.";
   static const String loginFailed = "Failed to login. Please try again!";
   static const String loginLoading = "Logging you in!";
@@ -70,4 +70,6 @@ class Strings {
   static const String usernameWarning = "Invalid username";
   static const String passwordWarning = "Invalid password";
   static const String editProfile = "Edit Profile";
+  static const String route = "Route";
+  static const String vehicleType = "Vehicle Type";
 }
