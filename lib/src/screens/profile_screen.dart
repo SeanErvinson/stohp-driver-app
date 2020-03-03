@@ -85,6 +85,9 @@ class ProfileScreen extends StatelessWidget {
                                     size: 16,
                                     color: Colors.black87,
                                   ),
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                      "vehicle-info",
+                                      arguments: UserArgument(user: user)),
                                 ),
                                 ListTile(
                                   onTap: () {
