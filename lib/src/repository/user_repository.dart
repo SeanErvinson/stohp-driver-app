@@ -30,7 +30,7 @@ class UserRepository {
     });
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
-      var user = User.fromJson(jsonData);
+      var user = User.fromJson(jsonData["user"]);
       return user;
     }
     return null;
@@ -43,6 +43,7 @@ class UserRepository {
   }
 
   Future<void> persistToken(String token) async {
+    if (token == null) return;
     final storage = new FlutterSecureStorage();
     await storage.write(key: _tokenKey, value: token);
     return;
@@ -68,5 +69,70 @@ class UserRepository {
       return jsonData;
     }
     throw BadRequestException(response.body.toString());
+  }
+
+  Future<String> uploadAvatar(String filename, String base64Image) async {
+    String url = "${ApiService.baseUrl}/api/v1/users/upload/";
+    Map body = {
+      "avatar": base64Image,
+    };
+    var token = await getToken();
+    var response = await http.put(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Token $token',
+        },
+        body: jsonEncode(body));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return data["avatar"];
+    } else {
+      return null;
+    }
+  }
+
+  Future<User> updatePersonalInfo(User user) async {
+    String url = "${ApiService.baseUrl}/api/v1/users/${user.id}/";
+    Map body = {
+      "username": user.username,
+      "first_name": user.firstName,
+      "last_name": user.lastName,
+      "email": user.email
+    };
+    var token = await getToken();
+    var response = await http.put(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Token $token',
+        },
+        body: jsonEncode(body));
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      var user = User.fromJson(jsonData);
+      return user;
+    } else {
+      return null;
+    }
+  }
+
+  Future<User> updateVehicleInfo(User user) async {
+    String url = "${ApiService.baseUrl}/api/v1/users/${user.id}/";
+    var token = await getToken();
+    var response = await http.put(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Token $token',
+        },
+        body: jsonEncode(user.toJson()));
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      var user = User.fromJson(jsonData);
+      return user;
+    } else {
+      return null;
+    }
   }
 }
