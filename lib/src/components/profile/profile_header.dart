@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_picture.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
-
 import 'bloc/profile_picture_bloc.dart';
 import 'edit_profile.dart';
 
@@ -18,7 +17,10 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _profilePictireBloc = ProfilePictureBloc();
+    final _usableScreenHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Container(
+      height: _usableScreenHeight * .2,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,29 +39,45 @@ class ProfileHeader extends StatelessWidget {
               fontSize: 18,
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                user.profile.vehicle,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      user.profile.vehicle,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                  ),
+                  ),
                 ),
-              ),
-              VerticalDivider(
-                color: Colors.red,
-                thickness: 14,
-              ),
-              Text(
-                user.profile.route,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
+                VerticalDivider(
+                  color: Colors.black54,
+                  endIndent: 4,
                 ),
-              )
-            ],
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      user.profile.route,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
