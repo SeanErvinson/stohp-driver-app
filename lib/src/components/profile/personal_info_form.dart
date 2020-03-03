@@ -47,7 +47,7 @@ class _PersonalInfoFormState extends State<PersonalInfoForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      Strings.personalInfoSuccess,
+                      Strings.updateSuccess,
                       style: TextStyle(fontSize: 14.0),
                     ),
                     Icon(Icons.error, size: 20.0)
@@ -67,7 +67,7 @@ class _PersonalInfoFormState extends State<PersonalInfoForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      Strings.personalInfoFail,
+                      Strings.updateFailed,
                       style: TextStyle(fontSize: 14.0),
                     ),
                     Icon(Icons.error, size: 20.0)
