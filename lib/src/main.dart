@@ -58,6 +58,9 @@ class StohpDriverApp extends StatelessWidget {
         "home": (context) => HomeScreen(),
         "stop-code": (context) => StopCodeScreen(),
         "splash": (context) => SplashScreen(),
+        "personal-info": (context) => ProfilePersonalInfoScreen(),
+        "vehicle-info": (context) => ProfileVehicleInfoScreen(),
+        "privacy-policy": (context) => PrivacyPolicyScreen(),
       },
       home: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
