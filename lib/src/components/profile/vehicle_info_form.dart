@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
+import 'package:stohp_driver_app/src/models/vehicle_type.dart';
+import 'package:stohp_driver_app/src/models/vehicle_info.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
 
 import 'bloc/vehicle_info_bloc.dart';
@@ -22,16 +24,12 @@ class _VehicleInfoFormState extends State<VehicleInfoForm> {
   final VehicleInfoBloc _bloc = VehicleInfoBloc();
   _VehicleInfoFormState(this.user);
   String _dropDownValue;
-  List<String> _vehicleType = [
-    "UV Express",
-    "Bus",
-    "Jeep",
-  ];
+
   @override
   void initState() {
     _routeController.text =
         user.profile.route != null ? user.profile.route : "";
-    _dropDownValue = user.profile.vehicle;
+    _dropDownValue = VehicleType.parseVehicleType(user.profile.vehicle).code;
     super.initState();
   }
 
@@ -101,10 +99,6 @@ class _VehicleInfoFormState extends State<VehicleInfoForm> {
                 ),
                 DropdownButtonFormField(
                   isDense: true,
-                  hint: _dropDownValue == null
-                      ? Text(Strings.vehicleType)
-                      : Text(_dropDownValue,
-                          style: TextStyle(color: Colors.blue)),
                   isExpanded: true,
                   decoration: InputDecoration(
                     labelText: Strings.vehicleType,
@@ -117,10 +111,10 @@ class _VehicleInfoFormState extends State<VehicleInfoForm> {
                       },
                     );
                   },
-                  items: _vehicleType
-                      .map((value) => DropdownMenuItem(
-                            child: Text(value),
-                            value: value,
+                  items: VehicleType.getVehicleTypes()
+                      .map((VehicleType type) => DropdownMenuItem(
+                            child: Text(type.name),
+                            value: type.code,
                           ))
                       .toList(),
                 ),
@@ -134,7 +128,7 @@ class _VehicleInfoFormState extends State<VehicleInfoForm> {
               bloc: _bloc,
               builder: (context, state) {
                 if (state is VehicleInfoSuccess) {
-                  user = state.user;
+                  user.profile = state.user.profile;
                 }
                 return FlatButton(
                   child: Text(
@@ -143,12 +137,15 @@ class _VehicleInfoFormState extends State<VehicleInfoForm> {
                   ),
                   color: colorSecondary,
                   onPressed: () {
-                    User newUser = user;
-                    newUser.profile.route = _routeController.text.length != 0
+                    VehicleInfo vehicleInfo = VehicleInfo();
+                    vehicleInfo.route = _routeController.text.length != 0
                         ? _routeController.text
                         : user.profile.route;
-                    newUser.profile.vehicle = _dropDownValue;
-                    _bloc.add(SaveVehicleInfo(newUser));
+                    vehicleInfo.username = user.username;
+                    vehicleInfo.id = user.id;
+                    vehicleInfo.vehicleType =
+                        _dropDownValue ?? user.profile.vehicle;
+                    _bloc.add(SaveVehicleInfo(vehicleInfo));
                   },
                 );
               },
