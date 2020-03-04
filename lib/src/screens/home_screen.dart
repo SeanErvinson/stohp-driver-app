@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stohp_driver_app/src/components/common/bloc/greet_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/stohp_driver_icons.dart';
 import 'package:stohp_driver_app/src/components/common/stop_code_argument.dart';
 import 'package:stohp_driver_app/src/components/home/bloc/space_bloc.dart';
@@ -39,91 +40,108 @@ class HomeScreen extends StatelessWidget {
             };
           }
           return Scaffold(
-              extendBody: true,
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: fabColor,
-                onPressed: spaceEvent,
-                child: Text(
-                  fabText,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+            extendBody: true,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: fabColor,
+              onPressed: spaceEvent,
+              child: Text(
+                fabText,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              bottomNavigationBar: BottomAppBar(
-                  notchMargin: 8,
-                  shape: CircularNotchedRectangle(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      FlatButton(
-                        shape: CircleBorder(),
-                        textColor: Colors.black54,
-                        onPressed: () => Navigator.of(context).pushNamed(
-                            "stop-code",
-                            arguments: StopCodeArgument(user.profile.stopCode)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Icon(
-                              StohpDriver.qr,
-                              size: 20,
-                            ),
-                            Text(
-                              Strings.navQrCode,
-                              style: TextStyle(fontSize: 10),
-                            )
-                          ],
-                        ),
+            ),
+            bottomNavigationBar: BottomAppBar(
+                notchMargin: 8,
+                shape: CircularNotchedRectangle(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    FlatButton(
+                      shape: CircleBorder(),
+                      textColor: Colors.black54,
+                      onPressed: () => Navigator.of(context).pushNamed(
+                          "stop-code",
+                          arguments: StopCodeArgument(user.profile.stopCode)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            StohpDriver.qr,
+                            size: 20,
+                          ),
+                          Text(
+                            Strings.navQrCode,
+                            style: TextStyle(fontSize: 10),
+                          )
+                        ],
                       ),
-                      FlatButton(
-                        shape: CircleBorder(),
-                        textColor: Colors.black54,
-                        onPressed: () => Navigator.of(context).pushNamed(
-                            "profile",
-                            arguments: ProfileScreenArguemnt(user)),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Icon(
-                              StohpDriver.user,
-                              size: 20,
-                            ),
-                            Text(
-                              Strings.navProfile,
-                              style: TextStyle(fontSize: 10),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  )),
-              body: Column(
-                children: <Widget>[
-                  Container(
-                    color: headerColor,
-                    width: double.infinity,
-                    height: _usableScreenHeight * .08,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        RichText(
-                          text: TextSpan(text: "Good Morning!\n", children: [
-                            TextSpan(
-                              text: "${user.firstName}",
-                            ),
-                          ]),
-                        ),
-                      ],
                     ),
+                    FlatButton(
+                      shape: CircleBorder(),
+                      textColor: Colors.black54,
+                      onPressed: () => Navigator.of(context).pushNamed(
+                          "profile",
+                          arguments: ProfileScreenArguemnt(user)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            StohpDriver.user,
+                            size: 20,
+                          ),
+                          Text(
+                            Strings.navProfile,
+                            style: TextStyle(fontSize: 10),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+            body: Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  color: headerColor,
+                  width: double.infinity,
+                  height: _usableScreenHeight * .08,
+                  child: BlocBuilder<GreetBloc, GreetState>(
+                    bloc: BlocProvider.of<GreetBloc>(context),
+                    builder: (context, state) {
+                      String greetings = Strings.greetingsDefault;
+                      if (state is GreetMorning) {
+                        greetings = Strings.greetingsMorning;
+                      }
+                      if (state is GreetAfternoon) {
+                        greetings = Strings.greetingsAfternoon;
+                      }
+                      if (state is GreetEvening) {
+                        greetings = Strings.greetingsEvening;
+                      }
+                      return RichText(
+                        text: TextSpan(
+                            text: greetings,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            children: [
+                              TextSpan(text: "\n"),
+                              TextSpan(
+                                text: "${user.firstName}",
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                              ),
+                            ]),
+                      );
+                    },
                   ),
-                  Expanded(
-                      child: Container(
-                    color: Colors.black12,
-                  ))
-                ],
-              ));
+                ),
+                Expanded(
+                    child: Container(
+                  color: Colors.black12,
+                ))
+              ],
+            ),
+          );
         },
       ),
     );

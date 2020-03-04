@@ -73,4 +73,8 @@ class Strings {
   static const String route = "Route";
   static const String vehicleType = "Vehicle Type";
   static const String gender = "Gender";
+  static const String greetingsDefault = "Hello ";
+  static const String greetingsMorning = "Good Morning ";
+  static const String greetingsAfternoon = "Good Afternoon ";
+  static const String greetingsEvening = "Good Evening ";
 }

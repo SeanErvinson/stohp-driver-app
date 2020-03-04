@@ -12,6 +12,7 @@ import 'package:stohp_driver_app/src/values/values.dart';
 
 import 'components/common/DefualtBlocDelegate.dart';
 import 'components/common/bloc/authentication_bloc.dart';
+import 'components/common/bloc/greet_bloc.dart';
 
 void main() {
   BlocSupervisor.delegate = DefaultBlocDelegate();
@@ -100,8 +101,13 @@ class StohpDriverApp extends StatelessWidget {
                       );
                     });
                   }
-                  return BlocProvider<SpaceBloc>(
-                    create: (context) => SpaceBloc()..add(SpaceHas()),
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<SpaceBloc>(
+                          create: (context) => SpaceBloc()..add(SpaceHas())),
+                      BlocProvider<GreetBloc>(
+                          create: (context) => GreetBloc()..add(GetGreetings()))
+                    ],
                     child: HomeScreen(
                       user: state.user,
                     ),
