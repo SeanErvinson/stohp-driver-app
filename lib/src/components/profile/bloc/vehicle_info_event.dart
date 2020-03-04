@@ -4,7 +4,7 @@ part of 'vehicle_info_bloc.dart';
 abstract class VehicleInfoEvent {}
 
 class SaveVehicleInfo extends VehicleInfoEvent {
-  final User user;
+  final VehicleInfo vehicleInfo;
 
-  SaveVehicleInfo(this.user);
+  SaveVehicleInfo(this.vehicleInfo);
 }
