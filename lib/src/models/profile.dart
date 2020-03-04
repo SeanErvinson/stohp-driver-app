@@ -10,41 +10,20 @@ class Profile {
   Profile({this.gender, this.avatar, this.vehicle, this.route, this.stopCode});
 
   Profile.fromJson(Map<String, dynamic> json) {
-    gender = json['gender'];
+    vehicle = json["vehicle"];
     avatar = json['avatar'];
-    var vehicleCode = json['vehicle'];
-    switch (vehicleCode) {
-      case "U":
-        vehicle = "UV Express";
-        break;
-      case "J":
-        vehicle = "Jeep";
-        break;
-      case "B":
-        vehicle = "Bus";
-        break;
-      default:
-        vehicle = null;
-    }
+    gender = json["gender"];
     route = json['route'];
     stopCode = json['stop_code'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['gender'] = this.gender;
     data['avatar'] = this.avatar;
-    if (this.vehicle == "UV Express") {
-      data['vehicle'] = EnumToString.parse(Vehicle.U);
-    } else if (this.vehicle == "Bus") {
-      data['vehicle'] = EnumToString.parse(Vehicle.B);
-    } else if (this.vehicle == "Jeep") {
-      data['vehicle'] = EnumToString.parse(Vehicle.J);
-    }
+    data['vehicle'] = this.vehicle;
+    data['gender'] = this.gender;
     data['route'] = this.route;
     data['stop_code'] = this.stopCode;
     return data;
   }
 }
-
-enum Vehicle { U, B, J }
