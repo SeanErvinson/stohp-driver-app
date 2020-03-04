@@ -17,18 +17,21 @@ void main() {
   BlocSupervisor.delegate = DefaultBlocDelegate();
   final userRepository = UserRepository();
   runApp(
-    BlocProvider<AuthenticationBloc>(
-      create: (context) {
-        return AuthenticationBloc(userRepository: userRepository)
-          ..add(AppStarted());
-      },
-      child: BlocProvider<DialogBloc>(
-        create: (context) => DialogBloc(),
-        child: BlocProvider<StopBloc>(
-          create: (context) => StopBloc(BlocProvider.of<DialogBloc>(context)),
-          child: StohpDriverApp(userRepository: userRepository),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+            create: (context) =>
+                AuthenticationBloc(userRepository: userRepository)
+                  ..add(AppStarted())),
+        BlocProvider<DialogBloc>(
+          create: (context) => DialogBloc(),
         ),
-      ),
+        BlocProvider<StopBloc>(
+          create: (context) =>
+              StopBloc(dialogBloc: BlocProvider.of<DialogBloc>(context)),
+        ),
+      ],
+      child: StohpDriverApp(userRepository: userRepository),
     ),
   );
 }
