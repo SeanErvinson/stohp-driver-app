@@ -5,6 +5,7 @@ import 'package:stohp_driver_app/src/models/user.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
 
 class ProfilePersonalInfoScreen extends StatelessWidget {
+  static const double appBarHeight = 48.0;
   @override
   Widget build(BuildContext context) {
     final UserArgument args = ModalRoute.of(context).settings.arguments;
@@ -13,7 +14,7 @@ class ProfilePersonalInfoScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(48),
+          preferredSize: Size.fromHeight(appBarHeight),
           child: AppBar(
             titleSpacing: 0,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -29,7 +30,12 @@ class ProfilePersonalInfoScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: PersonalInfoForm(user: user),
+        body: SingleChildScrollView(
+            child: Container(
+                height: MediaQuery.of(context).size.height -
+                    appBarHeight -
+                    MediaQuery.of(context).padding.top,
+                child: PersonalInfoForm(user: user))),
       ),
     );
   }
