@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
 import 'package:stohp_driver_app/src/services/api_service.dart';
-import 'package:vibration/vibration.dart';
 import 'package:web_socket_channel/io.dart';
 
 part 'stop_event.dart';
@@ -16,7 +14,7 @@ class StopBloc extends Bloc<StopEvent, StopState> {
   IOWebSocketChannel _socket;
   StreamSubscription _wsSubscription;
 
-  StopBloc(this._dialogBloc);
+  StopBloc({DialogBloc dialogBloc}) : this._dialogBloc = dialogBloc;
 
   @override
   Future<void> close() {
@@ -55,11 +53,6 @@ class StopBloc extends Bloc<StopEvent, StopState> {
   }
 
   Stream<StopState> _mapStopListen(String data) async* {
-    FlutterRingtonePlayer.playNotification(
-      looping: false,
-      asAlarm: true,
-    );
-    Vibration.vibrate(pattern: [500, 1000, 500, 1000]);
     _dialogBloc.add(ShowDialog());
     yield StopReceived();
   }
