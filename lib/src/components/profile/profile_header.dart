@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_picture.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
+import 'package:stohp_driver_app/src/models/vehicle_type.dart';
 import 'bloc/profile_picture_bloc.dart';
 import 'edit_profile.dart';
 
 class ProfileHeader extends StatelessWidget {
-  static const String _defaultProfilePic =
-      "assets/images/default-profile-pic.png";
   const ProfileHeader({
     Key key,
     @required this.user,
@@ -50,12 +49,13 @@ class ProfileHeader extends StatelessWidget {
                     alignment: Alignment.center,
                     width: double.infinity,
                     child: Text(
-                      user.profile.vehicle,
+                      VehicleType.parseVehicleType(user.profile.vehicle).name ??
+                          "",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
                       ),
-                  ),
+                    ),
                   ),
                 ),
                 VerticalDivider(
@@ -68,7 +68,7 @@ class ProfileHeader extends StatelessWidget {
                     alignment: Alignment.center,
                     width: double.infinity,
                     child: Text(
-                      user.profile.route,
+                      user.profile.route ?? "",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
