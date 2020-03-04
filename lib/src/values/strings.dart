@@ -72,4 +72,5 @@ class Strings {
   static const String editProfile = "Edit Profile";
   static const String route = "Route";
   static const String vehicleType = "Vehicle Type";
+  static const String gender = "Gender";
 }
