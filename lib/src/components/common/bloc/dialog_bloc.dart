@@ -17,11 +17,24 @@ class DialogBloc extends Bloc<DialogEvent, DialogState> {
     DialogEvent event,
   ) async* {
     if (event is ShowDialog) {
-      yield DialogVisible();
+      yield* _mapShowDialog();
     } else {
-      FlutterRingtonePlayer.stop();
-      Vibration.cancel();
-      yield DialogHidden();
+      yield* _mapHideDialog();
     }
+  }
+
+  Stream<DialogState> _mapShowDialog() async* {
+    FlutterRingtonePlayer.playNotification(
+      looping: false,
+      asAlarm: true,
+    );
+    Vibration.vibrate(pattern: [500, 1000, 500, 1000]);
+    yield DialogVisible();
+  }
+
+  Stream<DialogState> _mapHideDialog() async* {
+    FlutterRingtonePlayer.stop();
+    Vibration.cancel();
+    yield DialogHidden();
   }
 }
