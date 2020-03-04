@@ -5,6 +5,7 @@ import 'package:stohp_driver_app/src/components/common/stohp_driver_icons.dart';
 import 'package:stohp_driver_app/src/components/profile/generate_stop_code_dialog.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_header.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_screen_argument.dart';
+import 'package:stohp_driver_app/src/components/profile/profile_tile.dart';
 import 'package:stohp_driver_app/src/components/profile/user_screen_argument.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
@@ -59,87 +60,50 @@ class ProfileScreen extends StatelessWidget {
                                   fontSize: 12, color: Colors.black54),
                             ),
                           ),
-                          Expanded(
-                            child: ListView(
-                              itemExtent: 40,
-                              children: <Widget>[
-                                ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  dense: true,
-                                  title: Text(Strings.personalInfo),
-                                  trailing: Icon(
-                                    StohpDriver.user,
-                                    size: 16,
-                                    color: Colors.black87,
-                                  ),
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                      "personal-info",
-                                      arguments: UserArgument(user: user)),
-                                ),
-                                ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  dense: true,
-                                  title: Text(Strings.vehicleInfo),
-                                  trailing: Icon(
-                                    Icons.directions_car,
-                                    size: 16,
-                                    color: Colors.black87,
-                                  ),
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                      "vehicle-info",
-                                      arguments: UserArgument(user: user)),
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) {
-                                        return GenerateStopCodeDialog(
-                                          user: user,
-                                          userRepository: userRepository,
-                                        );
-                                      },
-                                    );
-                                  },
-                                  contentPadding: EdgeInsets.zero,
-                                  dense: true,
-                                  title: Text(Strings.generateStopCode),
-                                  trailing: Icon(
-                                    StohpDriver.arrows_cw,
-                                    size: 16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ],
+                          ProfileListTile(
+                            title: Strings.personalInfo,
+                            icon: StohpDriver.user,
+                            onPressed: () => Navigator.of(context).pushNamed(
+                                "personal-info",
+                                arguments: UserArgument(user: user)),
+                          ),
+                          Divider(height: 1),
+                          ProfileListTile(
+                            title: Strings.vehicleInfo,
+                            icon: Icons.directions_car,
+                            onPressed: () => Navigator.of(context).pushNamed(
+                                "vehicle-info",
+                                arguments: UserArgument(user: user)),
+                          ),
+                          Divider(height: 1),
+                          ProfileListTile(
+                            title: Strings.generateStopCode,
+                            icon: StohpDriver.arrows_cw,
+                            onPressed: () => showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return GenerateStopCodeDialog(
+                                  user: user,
+                                  userRepository: userRepository,
+                                );
+                              },
                             ),
                           ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(),
-                          ),
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            dense: true,
-                            title: Text(Strings.privacyPolicy),
-                            trailing: Icon(
-                              Icons.lock,
-                              size: 16,
-                              color: Colors.black54,
-                            ),
-                            onTap: () => Navigator.of(context)
+                          Divider(height: 1),
+                          Spacer(),
+                          ProfileListTile(
+                            title: Strings.privacyPolicy,
+                            icon: Icons.lock,
+                            onPressed: () => Navigator.of(context)
                                 .pushNamed("privacy-policy"),
                           ),
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            dense: true,
-                            title: Text(Strings.logout),
-                            trailing: Icon(
-                              Icons.exit_to_app,
-                              size: 24,
-                              color: colorSecondary,
-                            ),
-                            onTap: () => showDialog(
+                          Divider(height: 1),
+                          ProfileListTile(
+                            title: Strings.logout,
+                            icon: Icons.exit_to_app,
+                            iconColor: colorSecondary,
+                            onPressed: () => showDialog(
                               context: context,
                               builder: (context) {
                                 return _buildLogoutConfirmationDialog(context);
