@@ -13,14 +13,14 @@ class UserRepository {
   final String _tokenKey = "token";
 
   Future<String> authenticate({@required username, @required password}) async {
-    String url = "${ApiService.baseUrl}/api/v1/auth/login/";
+    String url = "${ApiService.baseUrl}/api/v1/auth/login-driver/";
     var response = await http
         .post(url, body: {'username': username, 'password': password});
     if (response.statusCode == 200) {
       Map<String, dynamic> token = jsonDecode(response.body);
       return token["token"];
     }
-    return null;
+    throw BadRequestException(response.body.toString());
   }
 
   Future<User> getUser(String token) async {
