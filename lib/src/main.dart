@@ -61,7 +61,6 @@ class StohpDriverApp extends StatelessWidget {
         "profile": (context) => ProfileScreen(),
         "home": (context) => HomeScreen(),
         "stop-code": (context) => StopCodeScreen(),
-        "splash": (context) => SplashScreen(),
         "personal-info": (context) => ProfilePersonalInfoScreen(),
         "vehicle-info": (context) => ProfileVehicleInfoScreen(),
         "privacy-policy": (context) => PrivacyPolicyScreen(),
@@ -76,7 +75,7 @@ class StohpDriverApp extends StatelessWidget {
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             if (state is Uninitialized) {
-              return SplashScreen();
+              return WelcomeScreen();
             }
             if (state is Authenticated) {
               return BlocBuilder<DialogBloc, DialogState>(
