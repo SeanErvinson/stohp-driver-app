@@ -77,4 +77,5 @@ class Strings {
   static const String greetingsMorning = "Good Morning ";
   static const String greetingsAfternoon = "Good Afternoon ";
   static const String greetingsEvening = "Good Evening ";
+  static const String loginHeader = "Welcome back";
 }
