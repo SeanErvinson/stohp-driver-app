@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/greet_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/stohp_driver_icons.dart';
 import 'package:stohp_driver_app/src/components/common/stop_code_argument.dart';
+import 'package:stohp_driver_app/src/components/home/bloc/oversight_bloc.dart';
 import 'package:stohp_driver_app/src/components/home/bloc/space_bloc.dart';
+import 'package:stohp_driver_app/src/components/home/oversight_map.dart';
 import 'package:stohp_driver_app/src/components/profile/profile_screen_argument.dart';
 import 'package:stohp_driver_app/src/models/user.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
@@ -16,7 +18,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _usableScreenHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-    Color headerColor;
+    List<Color> headerColor;
     Color fabColor;
     String fabText;
     VoidCallback spaceEvent;
@@ -25,18 +27,20 @@ class HomeScreen extends StatelessWidget {
         bloc: BlocProvider.of<SpaceBloc>(context),
         builder: (context, state) {
           if (state is NoSpace) {
-            headerColor = colorPrimary;
+            headerColor = [redSecondary, redPrimary];
             fabText = Strings.space;
             fabColor = greenPrimary;
             spaceEvent = () {
               BlocProvider.of<SpaceBloc>(context).add(SpaceHas());
+              BlocProvider.of<OversightBloc>(context).add(ToggleIsFull());
             };
           } else {
-            headerColor = greenPrimary;
+            headerColor = [greenPrimary, bluePrimary];
             fabText = Strings.full;
             fabColor = colorPrimary;
             spaceEvent = () {
               BlocProvider.of<SpaceBloc>(context).add(SpaceFull());
+              BlocProvider.of<OversightBloc>(context).add(ToggleIsFull());
             };
           }
           return Scaffold(
@@ -103,8 +107,14 @@ class HomeScreen extends StatelessWidget {
             body: Column(
               children: <Widget>[
                 Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: headerColor,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
                   alignment: Alignment.center,
-                  color: headerColor,
                   width: double.infinity,
                   height: _usableScreenHeight * .08,
                   child: BlocBuilder<GreetBloc, GreetState>(
@@ -121,24 +131,25 @@ class HomeScreen extends StatelessWidget {
                         greetings = Strings.greetingsEvening;
                       }
                       return RichText(
+                        textAlign: TextAlign.center,
                         text: TextSpan(
                             text: greetings,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 24.0),
                             children: [
                               TextSpan(text: "\n"),
                               TextSpan(
                                 text: "${user.firstName}",
-                                style: TextStyle(fontWeight: FontWeight.w400),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18.0),
                               ),
                             ]),
                       );
                     },
                   ),
                 ),
-                Expanded(
-                    child: Container(
-                  color: Colors.black12,
-                ))
+                Expanded(child: OversightMap())
               ],
             ),
           );
