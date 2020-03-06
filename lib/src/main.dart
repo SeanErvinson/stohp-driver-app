@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/stop_dialog.dart';
+import 'package:stohp_driver_app/src/components/home/bloc/oversight_bloc.dart';
 import 'package:stohp_driver_app/src/components/home/bloc/space_bloc.dart';
 import 'package:stohp_driver_app/src/components/stop/bloc/stop_bloc.dart';
+import 'package:stohp_driver_app/src/models/driver_oversight_info.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
 import 'package:stohp_driver_app/src/screens/screens.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
@@ -100,12 +102,21 @@ class StohpDriverApp extends StatelessWidget {
                       );
                     });
                   }
+                  DriverOversightInfo driverOversightInfo = DriverOversightInfo(
+                      id: state.user.id,
+                      isFull: false,
+                      route: state.user.profile.route);
                   return MultiBlocProvider(
                     providers: [
                       BlocProvider<SpaceBloc>(
                           create: (context) => SpaceBloc()..add(SpaceHas())),
                       BlocProvider<GreetBloc>(
-                          create: (context) => GreetBloc()..add(GetGreetings()))
+                          create: (context) =>
+                              GreetBloc()..add(GetGreetings())),
+                      BlocProvider<OversightBloc>(
+                          create: (context) =>
+                              OversightBloc(driverOversightInfo)
+                                ..add(ConnectRoom()))
                     ],
                     child: HomeScreen(
                       user: state.user,
