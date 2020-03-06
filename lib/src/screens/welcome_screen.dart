@@ -6,6 +6,7 @@ class WelcomeScreen extends StatelessWidget {
   static const String _backgroundImage = "assets/images/background.jpg";
   static const String _foregroundImage =
       "assets/icons/logo-banner-foreground.png";
+
   @override
   Widget build(BuildContext context) {
     final _usableScreenHeight = MediaQuery.of(context).size.height;
@@ -35,7 +36,7 @@ class WelcomeScreen extends StatelessWidget {
                         Flexible(
                           flex: 1,
                           child: FadeIn(
-                            4.2,
+                            2,
                             CredentialButton(
                               title: Strings.login,
                               onPressed: () =>
