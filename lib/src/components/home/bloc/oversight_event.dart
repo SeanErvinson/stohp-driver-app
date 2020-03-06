@@ -12,7 +12,7 @@ class UpdateDriverPosition extends OversightEvent {
 }
 
 class UpdateCommuterPositions extends OversightEvent {
-  final CommuterPosition commuterPosition;
+  final CommuterOversightInfo commuterPosition;
 
   UpdateCommuterPositions(this.commuterPosition);
 }
