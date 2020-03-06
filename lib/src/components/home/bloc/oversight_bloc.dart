@@ -7,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 import 'package:stohp_driver_app/src/models/commuter_oversight_info.dart';
-import 'package:stohp_driver_app/src/models/commuter_position.dart';
 import 'package:stohp_driver_app/src/models/driver_oversight_info.dart';
 import 'package:stohp_driver_app/src/services/api_service.dart';
 import 'package:web_socket_channel/io.dart';
