@@ -17,13 +17,13 @@ part 'oversight_state.dart';
 class OversightBloc extends Bloc<OversightEvent, OversightState> {
   DriverOversightInfo _driverOversightInfo;
   Map<MarkerId, Marker> markers = {};
+
   Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
   IOWebSocketChannel _driverCommuterSocket;
   IOWebSocketChannel _commuterDriverSocket;
 
   StreamSubscription _userLocationSubscription;
-
-  StreamSubscription _driverCommuterSocketSubscription;
   StreamSubscription _commuterDriverSocketSubscription;
 
   final StreamController<Map<MarkerId, Marker>> _markersController =
@@ -59,6 +59,8 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
       yield* _mapUpdateDriverPosition(event.position);
     } else if (event is UpdateCommuterPositions) {
       yield* _mapUpdateCommuterPositions(event.commuterPosition);
+    } else if (event is DisconnectRoom) {
+      yield* _mapDisconnectRoom();
     } else if (event is ToggleIsFull) {
       yield* _mapToggleIsFull();
     }
@@ -79,12 +81,14 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
     _commuterDriverSocketSubscription =
         _commuterDriverSocket.stream.listen((value) {
       Map jsonData = jsonDecode(value);
-      var commuter = CommuterOversightInfo.fromJson(jsonData["cd_info"]);
-      if (jsonData["action"] == "disconnect")
-        _removeMarker(commuter.id);
-      else
-        add(UpdateCommuterPositions(commuter));
+      _parseCommuterData(jsonData);
     });
+  }
+
+  Stream<OversightState> _mapDisconnectRoom() async* {
+    _sendDisconnectRequest();
+    _closeSockets();
+    yield OversightInitial();
   }
 
   Stream<OversightState> _mapUpdateDriverPosition(Position position) async* {
@@ -109,6 +113,27 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
     _markersController.sink.add(markers);
   }
 
+  void _parseCommuterData(Map jsonData) {
+    if (jsonData["cd_info"] == null) return;
+    var commuter = CommuterOversightInfo.fromJson(jsonData["cd_info"]);
+    if (jsonData["action"] == "disconnect") {
+      _removeMarker(commuter.id);
+      return;
+    }
+    add(UpdateCommuterPositions(commuter));
+  }
+
+  void _sendDisconnectRequest() {
+    Map driverData = {
+      "dc_info": {
+        "id": _driverOversightInfo.id,
+      },
+      "action": "disconnect",
+    };
+    var jsonData = jsonEncode(driverData);
+    _driverCommuterSocket.sink.add(jsonData);
+  }
+
   void _createUpdateMarker(CommuterOversightInfo position) {
     final MarkerId _markerId = MarkerId(position.id.toString());
     markers.update(_markerId, (marker) {
@@ -116,6 +141,7 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
     }, ifAbsent: () {
       return Marker(
         draggable: false,
+        consumeTapEvents: true,
         markerId: _markerId,
         position: LatLng(position.lat, position.lng),
         icon: pinCommuterIcon,
@@ -131,10 +157,6 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
 
   @override
   Future<void> close() {
-    var jsonData = _driverOversightInfo.toJson();
-    jsonData["action"] = "disconnect";
-    print(jsonData);
-    _driverCommuterSocket.sink.add(jsonEncode(jsonData));
     _closeSockets();
     return super.close();
   }
@@ -143,8 +165,7 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
     _driverCommuterSocket.sink.close();
     _commuterDriverSocket.sink.close();
     _userLocationSubscription?.cancel();
-    _driverCommuterSocketSubscription?.cancel();
     _commuterDriverSocketSubscription?.cancel();
-    _markersController.close();
+    _markersController?.close();
   }
 }
