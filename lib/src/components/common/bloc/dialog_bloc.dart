@@ -24,7 +24,7 @@ class DialogBloc extends Bloc<DialogEvent, DialogState> {
   }
 
   Stream<DialogState> _mapShowDialog() async* {
-    FlutterRingtonePlayer.playNotification(
+    FlutterRingtonePlayer.playAlarm(
       looping: false,
       asAlarm: true,
     );
