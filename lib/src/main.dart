@@ -8,6 +8,7 @@ import 'package:stohp_driver_app/src/components/home/bloc/oversight_bloc.dart';
 import 'package:stohp_driver_app/src/components/home/bloc/space_bloc.dart';
 import 'package:stohp_driver_app/src/components/stop/bloc/stop_bloc.dart';
 import 'package:stohp_driver_app/src/models/driver_oversight_info.dart';
+import 'package:stohp_driver_app/src/models/vehicle_type.dart';
 import 'package:stohp_driver_app/src/repository/user_repository.dart';
 import 'package:stohp_driver_app/src/screens/screens.dart';
 import 'package:stohp_driver_app/src/values/values.dart';
@@ -108,6 +109,9 @@ class StohpDriverApp extends StatelessWidget {
                   }
                   DriverOversightInfo driverOversightInfo = DriverOversightInfo(
                       id: state.user.id,
+                      vehicleType: VehicleType.parseVehicleType(
+                              state.user.profile.vehicle)
+                          .name,
                       isFull: false,
                       route: state.user.profile.route);
                   return MultiBlocProvider(
