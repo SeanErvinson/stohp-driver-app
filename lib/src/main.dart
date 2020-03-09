@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/bloc/dialog_bloc.dart';
 import 'package:stohp_driver_app/src/components/common/stop_dialog.dart';
+import 'package:stohp_driver_app/src/components/home/bloc/location_update_bloc.dart';
 import 'package:stohp_driver_app/src/components/home/bloc/oversight_bloc.dart';
 import 'package:stohp_driver_app/src/components/home/bloc/space_bloc.dart';
 import 'package:stohp_driver_app/src/components/stop/bloc/stop_bloc.dart';
@@ -124,7 +125,10 @@ class StohpDriverApp extends StatelessWidget {
                       BlocProvider<OversightBloc>(
                           create: (context) =>
                               OversightBloc(driverOversightInfo)
-                                ..add(ConnectRoom()))
+                                ..add(ConnectRoom())),
+                      BlocProvider<LocationUpdateBloc>(
+                          create: (context) => LocationUpdateBloc(
+                              BlocProvider.of<OversightBloc>(context)))
                     ],
                     child: HomeScreen(
                       user: state.user,
