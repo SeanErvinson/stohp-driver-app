@@ -86,7 +86,9 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
   }
 
   Stream<OversightState> _mapDisconnectRoom() async* {
+    markers.clear();
     _sendDisconnectRequest();
+    _closeSockets();
     yield OversightInitial();
   }
 
@@ -177,7 +179,6 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
     await _driverCommuterSocket.sink?.close();
     await _userLocationSubscription?.cancel();
     await _commuterDriverSocketSubscription?.cancel();
-    await _markersController?.close();
     await _commuterDriverSocket.sink?.close();
   }
 }
