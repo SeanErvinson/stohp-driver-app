@@ -39,7 +39,7 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
 
     if (pinCommuterIcon == null) {
       BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(devicePixelRatio: 2.5), _iconPinAsset)
+              ImageConfiguration(devicePixelRatio: 1.75), _iconPinAsset)
           .then((onValue) {
         pinCommuterIcon = onValue;
       });
@@ -87,7 +87,6 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
 
   Stream<OversightState> _mapDisconnectRoom() async* {
     _sendDisconnectRequest();
-    _closeSockets();
     yield OversightInitial();
   }
 
@@ -108,8 +107,20 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
   }
 
   Stream<OversightState> _mapUpdateCommuterPositions(
-      CommuterOversightInfo commuterPosition) async* {
-    _createUpdateMarker(commuterPosition);
+      CommuterOversightInfo commuter) async* {
+    if (_driverOversightInfo.vehicleType != commuter.vehicleType &&
+        commuter.vehicleType != null) {
+      _removeMarker(commuter.id);
+      return;
+    }
+    if (commuter.route != null &&
+        !_driverOversightInfo.route
+            .toLowerCase()
+            .contains(commuter.route.toLowerCase())) {
+      _removeMarker(commuter.id);
+      return;
+    }
+    _createUpdateMarker(commuter);
     _markersController.sink.add(markers);
   }
 
@@ -134,16 +145,16 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
     _driverCommuterSocket.sink.add(jsonData);
   }
 
-  void _createUpdateMarker(CommuterOversightInfo position) {
-    final MarkerId _markerId = MarkerId(position.id.toString());
+  void _createUpdateMarker(CommuterOversightInfo commuter) {
+    final MarkerId _markerId = MarkerId(commuter.id.toString());
     markers.update(_markerId, (marker) {
-      return marker.copyWith(positionParam: LatLng(position.lat, position.lng));
+      return marker.copyWith(positionParam: LatLng(commuter.lat, commuter.lng));
     }, ifAbsent: () {
       return Marker(
         draggable: false,
         consumeTapEvents: true,
         markerId: _markerId,
-        position: LatLng(position.lat, position.lng),
+        position: LatLng(commuter.lat, commuter.lng),
         icon: pinCommuterIcon,
       );
     });
@@ -157,15 +168,16 @@ class OversightBloc extends Bloc<OversightEvent, OversightState> {
 
   @override
   Future<void> close() {
+    _sendDisconnectRequest();
     _closeSockets();
     return super.close();
   }
 
-  void _closeSockets() {
-    _driverCommuterSocket.sink.close();
-    _commuterDriverSocket.sink.close();
-    _userLocationSubscription?.cancel();
-    _commuterDriverSocketSubscription?.cancel();
-    _markersController?.close();
+  Future<void> _closeSockets() async {
+    await _driverCommuterSocket.sink?.close();
+    await _userLocationSubscription?.cancel();
+    await _commuterDriverSocketSubscription?.cancel();
+    await _markersController?.close();
+    await _commuterDriverSocket.sink?.close();
   }
 }
