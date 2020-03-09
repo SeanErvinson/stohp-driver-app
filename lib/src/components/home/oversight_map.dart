@@ -45,6 +45,18 @@ class _OversightMapState extends State<OversightMap> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    BlocProvider.of<OversightBloc>(context).add(DisconnectRoom());
+    super.dispose();
+    BlocProvider.of<OversightBloc>(context).close();
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     if (!_mapController.isCompleted) {
       _mapController.complete(controller);
