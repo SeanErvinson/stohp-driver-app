@@ -1,16 +1,20 @@
-# stohp_driver_app
+# Stohp Driver
 
-A new Flutter project.
+Stohp Driver application is a driver utility application that aims to give driver better experience.
+
+## Prerequisite
+- Flutter
+- Android IDE
+- Android SDK 28 or Oreo above
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Clone the project or download the zip file.
+```
+git clone <project_url>
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To run the application. Open an emulator or connect an appropriate device.
+```
+flutter run
+```
